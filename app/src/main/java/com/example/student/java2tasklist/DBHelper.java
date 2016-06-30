@@ -1,6 +1,8 @@
 package com.example.student.java2tasklist;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -33,4 +35,15 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS TASKS");
         onCreate(db);
     }
+
+    public boolean insertTask(String task, String is_completed){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("TASK", task);
+        contentValues.put("IS_COMPLETED",is_completed);
+        db.insert("TASKS", null, contentValues);
+        return true;
+    }
+
+
 }
