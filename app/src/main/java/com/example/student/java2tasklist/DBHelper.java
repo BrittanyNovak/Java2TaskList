@@ -45,5 +45,23 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public Cursor getData(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM TASKS WHERE ID="+id+"", null );
+        return res;
+    }
 
+    public boolean updateTask (Integer id, String task, String is_completed){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("TASK", task);
+        contentValues.put("IS_COMPLETED", is_completed);
+        db.update("TASKS", contentValues, "ID = ?", new String[] {Integer.toString(id)});
+        return true;
+    }
+
+    public Integer deleteTask (Integer id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete("TASKS", "ID = ?", new String[] {Integer.toString(id)});
+    }
 }
