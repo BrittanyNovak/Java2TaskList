@@ -3,6 +3,7 @@ package com.example.student.java2tasklist;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,40 +16,40 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
     private ListView lvTasks;
+            DBHelper mydb;
 
-    private ArrayList<String> array_list = new ArrayList<String>() {{
-        array_list.add("New Pictures");
-        array_list.add("Rub Clit");
-        array_list.add("Do not Cum");
-    }};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mydb = new DBHelper(this);
+        ArrayList array_list = mydb.getAllTasks();
         ArrayAdapter arrayAdapter=new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
-                array_list
-        );
+                array_list);
 
         lvTasks = (ListView)findViewById(R.id.lvTasks);
         lvTasks.setAdapter(arrayAdapter);
-//        lvTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-//                int id_To_Search = arg2 + 1;
-//
-//                Bundle dataBundle = new Bundle();
-//                dataBundle.putInt("id", id_To_Search);
-//
-//                Intent intent = new Intent(getApplicationContext(), DisplayTasks.class);
-//
-//                intent.putExtras(dataBundle);
-//                startActivity(intent);
-//            }
-//        });
+        lvTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+
+                int id_To_Search = arg2 + 1;
+
+                Bundle dataBundle = new Bundle();
+                dataBundle.putInt("id", id_To_Search);
+
+                Intent intent = new Intent(getApplicationContext(),DisplayTask.class);
+
+                intent.putExtras(dataBundle);
+                startActivity(intent);
+
+            }
+        });
     }
 
     @Override
@@ -60,16 +61,28 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+       super.onOptionsItemSelected(item);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()){
+            case R.id.item1:Bundle dataBundle = new Bundle();
+                dataBundle.putInt("id", 0);
+
+                Intent intent = new Intent(getApplicationContext(),DisplayTask.class);
+                intent.putExtras(dataBundle);
+
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    public boolean onKeyDown(int keycode, KeyEvent event){
+    if (keycode == KeyEvent.KEYCODE_BACK){
+        moveTaskToBack(true);
+    }
+        return super.onKeyDown(keycode, event);
+
     }
 }
+

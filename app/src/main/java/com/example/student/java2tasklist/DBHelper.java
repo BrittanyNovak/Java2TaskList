@@ -6,14 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Created by student on 6/29/2016.
  */
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "MyDB.db";
-    public static final String TASKLIST_NAME = "TASKS";
+    public static final String DATABASE_NAME = "MyDBName.db";
+    public static final String TASK_LIST_NAME = "TASKS";
     public static final String TASKS_COLUMN_TASK = "TASK";
     public static final String TASKS_COLUMN_IS_COMPLETED = "IS_COMPLETED";
 
@@ -63,5 +65,18 @@ public class DBHelper extends SQLiteOpenHelper {
     public Integer deleteTask (Integer id){
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete("TASKS", "ID = ?", new String[] {Integer.toString(id)});
+    }
+
+    public ArrayList<String> getAllTasks(){
+        ArrayList<String> array_list = new ArrayList<String>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("Select * From Tasks", null );
+        res.moveToFirst();
+
+        while(res.isAfterLast()== false){
+            array_list.add(res.getString(res.getColumnIndex(TASKS_COLUMN_TASK)));
+        }
+        return array_list;
     }
 }
