@@ -38,7 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertTask(String task, String is_completed){
+    public boolean insertTask(String task, Boolean is_completed){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("TASK", task);
@@ -53,7 +53,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean updateTask (Integer id, String task, String is_completed){
+    public boolean updateTask (Integer id, String task, Boolean is_completed){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("TASK", task);

@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
@@ -21,7 +22,7 @@ public class DisplayTask extends ActionBarActivity {
     private DBHelper mydb;
 
     TextView name;
-    TextView is_completed;
+    Switch is_completed;
     int id_To_Update = 0;
 
     @Override
@@ -30,7 +31,7 @@ public class DisplayTask extends ActionBarActivity {
         setContentView(R.layout.activity_display_task);
 
         name = (TextView) findViewById(R.id.etTask);
-        is_completed = (TextView) findViewById(R.id.swIS_COMPLETED);
+        is_completed = (Switch) findViewById(R.id.swIS_COMPLETED);
         mydb = new DBHelper(this);
 
         Bundle extras = getIntent().getExtras();
@@ -130,7 +131,7 @@ public class DisplayTask extends ActionBarActivity {
         if (extras != null) {
             int Value = extras.getInt("id");
             if (Value > 0) {
-                if (mydb.updateTask(id_To_Update, name.getText().toString(), is_completed.getText().toString())) {
+                if (mydb.updateTask(id_To_Update, name.getText().toString(), is_completed.isChecked())) {
                     Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -138,7 +139,7 @@ public class DisplayTask extends ActionBarActivity {
                     Toast.makeText(getApplicationContext(), "Not Updated", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                if (mydb.insertTask(name.getText().toString(), is_completed.getText().toString())) {
+                if (mydb.insertTask(name.getText().toString(), is_completed.isChecked())) {
                     Toast.makeText(getApplicationContext(), "Finished", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "Not Finished", Toast.LENGTH_SHORT).show();
