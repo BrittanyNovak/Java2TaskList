@@ -34,17 +34,6 @@
             android:layout_alignParentLeft="true"
             android:text="Task"/>
 
-        <EditText
-            android:id="@+id/etIS_COMPLETED"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="82dp"
-            android:ems="10"
-            android:inputType="text"
-            />
-
         <requestFocus/>
 
         <Button
@@ -55,6 +44,15 @@
             android:text="Save"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"/>
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task Completed"
+            android:id="@+id/swIS_COMPLETED"
+            android:layout_below="@+id/tvTask"
+            android:layout_centerHorizontal="true"
+            android:checked="false" />
 
 
     </RelativeLayout>

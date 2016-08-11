@@ -17,7 +17,7 @@ import android.view.Menu;
  * Created by bnovak on 8/3/16.
  */
 public class DisplayTask extends ActionBarActivity {
-    int from_Where_I_Am_Coming = 0;
+    int from_where_i_am_coming = 0;
     private DBHelper mydb;
 
     TextView name;
@@ -30,7 +30,7 @@ public class DisplayTask extends ActionBarActivity {
         setContentView(R.layout.activity_display_task);
 
         name = (TextView) findViewById(R.id.etTask);
-        is_completed = (TextView) findViewById(R.id.etIS_COMPLETED);
+        is_completed = (TextView) findViewById(R.id.swIS_COMPLETED);
         mydb = new DBHelper(this);
 
         Bundle extras = getIntent().getExtras();
