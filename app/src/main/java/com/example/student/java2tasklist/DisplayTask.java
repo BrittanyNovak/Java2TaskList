@@ -25,7 +25,7 @@ public class DisplayTask extends ActionBarActivity {
     int id_To_Update = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_task);
 
@@ -34,10 +34,10 @@ public class DisplayTask extends ActionBarActivity {
         mydb = new DBHelper(this);
 
         Bundle extras = getIntent().getExtras();
-        if(extras !=null){
+        if (extras != null) {
             int Value = extras.getInt("id");
 
-            if(Value>0){
+            if (Value > 0) {
                 Cursor rs = mydb.getData(Value);
                 id_To_Update = Value;
                 rs.moveToFirst();
@@ -45,18 +45,18 @@ public class DisplayTask extends ActionBarActivity {
                 String nam = rs.getString(rs.getColumnIndex(DBHelper.TASKS_COLUMN_TASK));
                 String is_complete = rs.getString(rs.getColumnIndex(DBHelper.TASKS_COLUMN_IS_COMPLETED));
 
-                if (!rs.isClosed()){
+                if (!rs.isClosed()) {
                     rs.close();
                 }
 
-                Button b = (Button)findViewById(R.id.btnSave);
+                Button b = (Button) findViewById(R.id.btnSave);
                 b.setVisibility(View.INVISIBLE);
 
-                name.setText((CharSequence)nam);
+                name.setText((CharSequence) nam);
                 name.setFocusable(false);
                 name.setClickable(false);
 
-                is_completed.setText((CharSequence)is_complete);
+                is_completed.setText((CharSequence) is_complete);
                 is_completed.setFocusable(false);
                 is_completed.setClickable(false);
             }
@@ -64,16 +64,14 @@ public class DisplayTask extends ActionBarActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         Bundle extras = getIntent().getExtras();
 
-        if(extras !=null){
+        if (extras != null) {
             int Value = extras.getInt("id");
-            if(Value>0){
+            if (Value > 0) {
                 getMenuInflater().inflate(R.menu.display_task, menu);
-            }
-
-            else{
+            } else {
                 getMenuInflater().inflate(R.menu.menu_main, menu);
             }
         }
@@ -81,12 +79,12 @@ public class DisplayTask extends ActionBarActivity {
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.Edit_Task:
-                Button b = (Button)findViewById(R.id.btnSave);
+                Button b = (Button) findViewById(R.id.btnSave);
                 b.setVisibility(View.VISIBLE);
 
                 name.setEnabled(true);
@@ -102,16 +100,16 @@ public class DisplayTask extends ActionBarActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Are you sure you want to delete this?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialog, int id){
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 mydb.deleteTask(id_To_Update);
                                 Toast.makeText(getApplicationContext(), "Deletion Successful", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                             }
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialog, int id){
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
                             }
                         });
@@ -127,33 +125,30 @@ public class DisplayTask extends ActionBarActivity {
 
     }
 
-    public void  run(View view){
+    public void run(View view) {
         Bundle extras = getIntent().getExtras();
-        if(extras !=null){
+        if (extras != null) {
             int Value = extras.getInt("id");
-            if(Value>0){
-                if(mydb.updateTask(id_To_Update,name.getText().toString(),is_completed.getText().toString()));
+            if (Value > 0) {
+                if (mydb.updateTask(id_To_Update, name.getText().toString(), is_completed.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
-            }
-
-            else{
-                Toast.makeText(getApplicationContext(), "Not Updated", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        else {
-            if (mydb.insertTask(name.getText().toString(), is_completed.getText().toString())) {
-                Toast.makeText(getApplicationContext(), "Finished", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Not Updated", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(getApplicationContext(), "Not Finished", Toast.LENGTH_SHORT).show();
+                if (mydb.insertTask(name.getText().toString(), is_completed.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "Finished", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Not Finished", Toast.LENGTH_SHORT).show();
+                }
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-        }
         }
     }
+}
 
 
 
