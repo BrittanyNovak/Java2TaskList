@@ -76,6 +76,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         while(res.isAfterLast()== false){
             array_list.add(res.getString(res.getColumnIndex(TASKS_COLUMN_TASK)));
+            res.moveToNext();
         }
         return array_list;
     }
