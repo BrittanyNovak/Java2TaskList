@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -18,6 +19,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TASK_LIST_NAME = "TASKS";
     public static final String TASKS_COLUMN_TASK = "TASK";
     public static final String TASKS_COLUMN_IS_COMPLETED = "IS_COMPLETED";
+    private static String DB_PATH = "/data/data/com.example.student.java2tasklist/databases/";
+    private final Context myContext;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -25,11 +28,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE TASKS (" +
-                "ID integer Primary Key AUTOINCREMENT," +
-                "TASK text," +
-                "IS_COMPLETED," +
-                "ENTERED DATETIME DEFAULT CURRENT_TIMESTAMP)" );
+        //db.execSQL("CREATE TABLE TASKS (" +
+               // "ID integer Primary Key AUTOINCREMENT," +
+               // "TASK text," +
+               // "IS_COMPLETED," +
+               // "ENTERED DATETIME DEFAULT CURRENT_TIMESTAMP)" );
+
+        InputStream myInput = myContext.getAssets().open(DB_NAME);
+        String outFileName = DB_PATH + DB_NAME;
+
     }
 
     @Override
