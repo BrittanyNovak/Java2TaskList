@@ -3,6 +3,7 @@ package com.example.student.java2tasklist;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -36,8 +37,8 @@ public class DBHelper extends SQLiteOpenHelper {
                // "IS_COMPLETED," +
                // "ENTERED DATETIME DEFAULT CURRENT_TIMESTAMP)" );
 
-        InputStream myInput = myContext.getAssets().open(DB_NAME);
-        String outFileName = DB_PATH + DB_NAME;
+        InputStream myInput = myContext.getAssets().open(DATABASE_NAME);
+        String outFileName = DB_PATH + DATABASE_NAME;
         OutputStream myOutput = new FileOutputStream(outFileName);
 
         byte[] buffer = new byte[1024];
@@ -52,9 +53,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void openDatabase() throws SQLException{
+    public void openDatabase() throws SQLException {
 
-        String myPath = DB_PATH + DB_NAME;
+        String myPath = DB_PATH + DATABASE_NAME;
         myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase);
     }
 
