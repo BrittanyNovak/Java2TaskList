@@ -26,9 +26,9 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE TASKS (" +
-                "ID integer Primary Key AUTOINCREMENT," +
-                "TASK text," +
-                "IS_COMPLETED," +
+                "ID integer Primary Key AUTOINCREMENT, " +
+                "TASK text, " +
+                "IS_COMPLETED integer, " +
                 "ENTERED DATETIME DEFAULT CURRENT_TIMESTAMP)" );
     }
 
@@ -39,10 +39,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public boolean insertTask(String task, Boolean is_completed){
+        int int_completed = (is_completed) ? 1 : 0;
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("TASK", task);
-        contentValues.put("IS_COMPLETED",is_completed);
+        contentValues.put("IS_COMPLETED", int_completed);
         db.insert("TASKS", null, contentValues);
         return true;
     }
@@ -76,6 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         while(res.isAfterLast()== false){
             array_list.add(res.getString(res.getColumnIndex(TASKS_COLUMN_TASK)));
+            res.moveToNext();
         }
         return array_list;
     }

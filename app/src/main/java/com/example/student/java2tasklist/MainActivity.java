@@ -10,15 +10,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
     private ListView lvTasks;
-            DBHelper mydb;
-
-
+    public  DBHelper mydb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

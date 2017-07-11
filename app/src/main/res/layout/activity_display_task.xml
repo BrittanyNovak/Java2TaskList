@@ -50,9 +50,10 @@
             android:layout_height="wrap_content"
             android:text="Task Completed"
             android:id="@+id/swIS_COMPLETED"
-            android:layout_below="@+id/tvTask"
+            android:checked="false"
+            android:layout_below="@+id/etTask"
             android:layout_centerHorizontal="true"
-            android:checked="false" />
+            android:layout_marginTop="45dp" />
 
 
     </RelativeLayout>
