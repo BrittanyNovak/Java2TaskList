@@ -3,9 +3,15 @@ package com.example.student.java2tasklist;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
@@ -14,66 +20,147 @@ import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "MyDBName.db";
+    public static final String DATABASE_NAME = "tasklists.db";
     public static final String TASK_LIST_NAME = "TASKS";
     public static final String TASKS_COLUMN_TASK = "TASK";
     public static final String TASKS_COLUMN_IS_COMPLETED = "IS_COMPLETED";
+    private static String DB_PATH = "/data/data/com.example.student.java2tasklist/databases/";
+    private final Context myContext;
+    private SQLiteDatabase myDataBase;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
+        this.myContext = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE TASKS (" +
-                "ID integer Primary Key AUTOINCREMENT, " +
-                "TASK text, " +
-                "IS_COMPLETED integer, " +
-                "ENTERED DATETIME DEFAULT CURRENT_TIMESTAMP)" );
+        //db.execSQL("CREATE TABLE TASKS (" +
+               // "ID integer Primary Key AUTOINCREMENT," +
+               // "TASK text," +
+               // "IS_COMPLETED," +
+               // "ENTERED DATETIME DEFAULT CURRENT_TIMESTAMP)" );
+//        db.close();
+        boolean dbExist = checkDataBase();
+
+        if(dbExist){
+            Toast.makeText(myContext, "Loading db", Toast.LENGTH_SHORT).show();
+        } else {
+            this.getReadableDatabase();
+
+            try {
+
+                InputStream myInput = myContext.getAssets().open(DATABASE_NAME);
+                String outFileName = DB_PATH + DATABASE_NAME;
+                OutputStream myOutput = new FileOutputStream(outFileName);
+
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = myInput.read(buffer)) > 0) {
+                    myOutput.write(buffer, 0, length);
+                }
+
+                myOutput.flush();
+                myOutput.close();
+                myInput.close();
+            } catch (IOException e){
+                // Failed to write to database
+                Toast.makeText(myContext, "Unable to write db", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+//    public void openDataBase() throws SQLException{
+//
+//        //Open the database
+//        String myPath = DB_PATH + DATABASE_NAME;
+//        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+//
+//    }
+
+    private boolean checkDataBase(){
+
+        try{
+            String myPath = DB_PATH + DATABASE_NAME;
+            myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+
+        }catch (SQLException e){
+
+        }
+
+        return myDataBase != null ? true : false;
+    }
+
+    private boolean loadDataBase(){
+
+        try{
+            String myPath = DB_PATH + DATABASE_NAME;
+            myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+
+        }catch (SQLException e){
+
+        }
+
+        return myDataBase != null ? true : false;
+    }
+
+//    public void openDatabase() throws SQLException {
+//
+//        String myPath = DB_PATH + DATABASE_NAME;
+//        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+//    }
+
+    @Override
+    public synchronized void close(){
+        if(myDataBase != null)
+            myDataBase.close();
+        super.close();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS TASKS");
-        onCreate(db);
+//        db.execSQL("DROP TABLE IF EXISTS TASKS");
+//        onCreate(db);
     }
 
     public boolean insertTask(String task, Boolean is_completed){
-        int int_completed = (is_completed) ? 1 : 0;
-
-        SQLiteDatabase db = this.getWritableDatabase();
+//        SQLiteDatabase db = this.getWritableDatabase();
+        this.loadDataBase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("TASK", task);
-        contentValues.put("IS_COMPLETED", int_completed);
-        db.insert("TASKS", null, contentValues);
+        contentValues.put("IS_COMPLETED",is_completed);
+        myDataBase.insert("TASKS", null, contentValues);
         return true;
     }
 
     public Cursor getData(int id){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM TASKS WHERE ID="+id+"", null );
+//        SQLiteDatabase db = myDataBase.getReadableDatabase();
+        Cursor res = myDataBase.rawQuery("SELECT * FROM TASKS WHERE ID="+id+"", null );
         return res;
     }
 
     public boolean updateTask (Integer id, String task, Boolean is_completed){
-        SQLiteDatabase db = this.getWritableDatabase();
+//        SQLiteDatabase db = this.getWritableDatabase();
+        this.loadDataBase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("TASK", task);
         contentValues.put("IS_COMPLETED", is_completed);
-        db.update("TASKS", contentValues, "ID = ?", new String[] {Integer.toString(id)});
+        myDataBase.update("TASKS", contentValues, "ID = ?", new String[] {Integer.toString(id)});
         return true;
     }
 
     public Integer deleteTask (Integer id){
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("TASKS", "ID = ?", new String[] {Integer.toString(id)});
+//        SQLiteDatabase db = this.getWritableDatabase();
+        this.loadDataBase();
+        return myDataBase.delete("TASKS", "ID = ?", new String[] {Integer.toString(id)});
     }
 
     public ArrayList<String> getAllTasks(){
         ArrayList<String> array_list = new ArrayList<String>();
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("Select * From Tasks", null );
+//        SQLiteDatabase db = this.getReadableDatabase();
+        this.checkDataBase();
+        Cursor res = myDataBase.rawQuery("Select * From TASKS", null );
         res.moveToFirst();
 
         while(res.isAfterLast()== false){
